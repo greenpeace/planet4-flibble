@@ -145,7 +145,7 @@ jobs:
       GOOGLE_PROJECT_ID: planet4-production
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-release
-      WP_DB_NAME: planet4-flibble_wordpress_master
+      WP_DB_NAME: planet4-flibble_wordpress_release
       WP_TITLE: Greenpeace Flibble Release Candidate
     steps:
       - attach_workspace:
