@@ -98,6 +98,7 @@ jobs:
       HELM_RELEASE: planet4-flibble-release
       # INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_release
+      WP_STATELESS_BUCKET: planet4-flibble-release
       WP_TITLE: Greenpeace Flibble Release Candidate
     steps:
       - setup_remote_docker
@@ -149,6 +150,7 @@ jobs:
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-release
       # INFRA_VERSION: develop
+      WP_STATELESS_BUCKET: planet4-flibble-release
       WP_DB_NAME: planet4-flibble_wordpress_release
       WP_TITLE: Greenpeace Flibble Release Candidate
     steps:
