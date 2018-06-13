@@ -254,7 +254,7 @@ jobs:
       - run:
           name: Deploy new containers
           environment:
-            NEWRELIC_APPNAME: Planet4 Flibble
+            NEWRELIC_APPNAME: Planet4 Flibble Production
           command: |
             export BUILD_TAG=build-$(cat /tmp/workspace/var/circle-build-num)
             make deploy
