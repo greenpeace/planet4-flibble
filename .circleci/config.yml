@@ -1,6 +1,6 @@
 defaults: &defaults
   docker:
-    - image: gcr.io/planet-4-151612/p4-builder:v0.8.3
+    - image: gcr.io/planet-4-151612/p4-builder:develop
   working_directory:  /home/circleci/
 
 version: 2
@@ -9,12 +9,14 @@ jobs:
   build-develop:
     <<: *defaults
     environment:
+      APP_ENVIRONMENT: development
       APP_HOSTNAME: k8s.p4.greenpeace.org
       APP_HOSTPATH: flibble
       CLOUDSQL_INSTANCE: p4-develop-k8s
       CONTAINER_PREFIX: planet4-flibble
       GOOGLE_PROJECT_ID: planet-4-151612
       HELM_NAMESPACE: develop
+      INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_develop
       WP_TITLE: Greenpeace Flibble Development
     steps:
@@ -58,12 +60,14 @@ jobs:
   deploy-develop:
     <<: *defaults
     environment:
+      APP_ENVIRONMENT: development
       APP_HOSTNAME: k8s.p4.greenpeace.org
       APP_HOSTPATH: flibble
       CLOUDSQL_INSTANCE: p4-develop-k8s
       CONTAINER_PREFIX: planet4-flibble
       GOOGLE_PROJECT_ID: planet-4-151612
       HELM_NAMESPACE: develop
+      INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_develop
       WP_TITLE: Greenpeace Flibble Development
     steps:
@@ -86,6 +90,7 @@ jobs:
   build-release:
     <<: *defaults
     environment:
+      APP_ENVIRONMENT: staging
       APP_HOSTNAME: release.k8s.p4.greenpeace.org
       APP_HOSTPATH: flibble
       CLOUDSQL_INSTANCE: planet4-prod
@@ -94,7 +99,9 @@ jobs:
       GOOGLE_PROJECT_ID: planet4-production
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-release
+      INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_release
+      WP_STATELESS_BUCKET: planet4-flibble-stateless-release
       WP_TITLE: Greenpeace Flibble Release Candidate
     steps:
       - setup_remote_docker
@@ -137,6 +144,7 @@ jobs:
   deploy-release:
     <<: *defaults
     environment:
+      APP_ENVIRONMENT: staging
       APP_HOSTNAME: release.k8s.p4.greenpeace.org
       APP_HOSTPATH: flibble
       CLOUDSQL_INSTANCE: planet4-prod
@@ -145,7 +153,9 @@ jobs:
       GOOGLE_PROJECT_ID: planet4-production
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-release
-      WP_DB_NAME: planet4-flibble_wordpress_master
+      WP_STATELESS_BUCKET: planet4-flibble-stateless-release
+      INFRA_VERSION: develop
+      WP_DB_NAME: planet4-flibble_wordpress_release
       WP_TITLE: Greenpeace Flibble Release Candidate
     steps:
       - attach_workspace:
@@ -175,8 +185,9 @@ jobs:
       GOOGLE_PROJECT_ID: planet4-production
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-master
+      INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_master
-      WP_STATELESS_BUCKET: planet4-flibble
+      WP_STATELESS_BUCKET: planet4-flibble-stateless
       WP_TITLE: Greenpeace Flibble
     steps:
       - setup_remote_docker
@@ -227,8 +238,9 @@ jobs:
       GOOGLE_PROJECT_ID: planet4-production
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-master
+      INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_master
-      WP_STATELESS_BUCKET: planet4-flibble
+      WP_STATELESS_BUCKET: planet4-flibble-stateless
       WP_TITLE: Greenpeace Flibble
     steps:
       - attach_workspace:
@@ -301,8 +313,17 @@ workflows:
           type: approval
           requires:
             - build-tag
-
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
       - deploy-tag:
           context: org-global
           requires:
             - hold-tag
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
