@@ -65,6 +65,8 @@ jobs:
       CONTAINER_PREFIX: planet4-flibble
       GOOGLE_PROJECT_ID: planet-4-151612
       HELM_NAMESPACE: develop
+      MIN_REPLICA_COUNT: 1
+      MAX_REPLICA_COUNT: 2
       # INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_develop
       WP_TITLE: Greenpeace Flibble Development
@@ -149,6 +151,8 @@ jobs:
       GOOGLE_PROJECT_ID: planet4-production
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-release
+      MIN_REPLICA_COUNT: 1
+      MAX_REPLICA_COUNT: 1
       WP_STATELESS_BUCKET: planet4-flibble-stateless-release
       # INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_release
@@ -232,6 +236,8 @@ jobs:
       GOOGLE_PROJECT_ID: planet4-production
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-master
+      MIN_REPLICA_COUNT: 1
+      MAX_REPLICA_COUNT: 1
       # INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_master
       WP_STATELESS_BUCKET: planet4-flibble-stateless
