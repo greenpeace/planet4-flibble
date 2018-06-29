@@ -16,7 +16,7 @@ jobs:
       CONTAINER_PREFIX: planet4-flibble
       GOOGLE_PROJECT_ID: planet-4-151612
       HELM_NAMESPACE: develop
-      INFRA_VERSION: develop
+      # INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_develop
       WP_TITLE: Greenpeace Flibble Development
     steps:
@@ -67,7 +67,7 @@ jobs:
       CONTAINER_PREFIX: planet4-flibble
       GOOGLE_PROJECT_ID: planet-4-151612
       HELM_NAMESPACE: develop
-      INFRA_VERSION: develop
+      # INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_develop
       WP_TITLE: Greenpeace Flibble Development
     steps:
@@ -99,7 +99,7 @@ jobs:
       GOOGLE_PROJECT_ID: planet4-production
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-release
-      INFRA_VERSION: develop
+      # INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_release
       WP_STATELESS_BUCKET: planet4-flibble-stateless-release
       WP_TITLE: Greenpeace Flibble Release Candidate
@@ -154,7 +154,7 @@ jobs:
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-release
       WP_STATELESS_BUCKET: planet4-flibble-stateless-release
-      INFRA_VERSION: develop
+      # INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_release
       WP_TITLE: Greenpeace Flibble Release Candidate
     steps:
@@ -185,7 +185,7 @@ jobs:
       GOOGLE_PROJECT_ID: planet4-production
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-master
-      INFRA_VERSION: develop
+      # INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_master
       WP_STATELESS_BUCKET: planet4-flibble-stateless
       WP_TITLE: Greenpeace Flibble
@@ -238,7 +238,7 @@ jobs:
       GOOGLE_PROJECT_ID: planet4-production
       HELM_NAMESPACE: flibble
       HELM_RELEASE: planet4-flibble-master
-      INFRA_VERSION: develop
+      # INFRA_VERSION: develop
       WP_DB_NAME: planet4-flibble_wordpress_master
       WP_STATELESS_BUCKET: planet4-flibble-stateless
       WP_TITLE: Greenpeace Flibble
