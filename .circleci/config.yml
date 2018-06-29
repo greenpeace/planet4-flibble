@@ -85,7 +85,7 @@ jobs:
             NEWRELIC_APPNAME: Planet4 Flibble Development
           command: |
             export BUILD_TAG=build-$(cat /tmp/workspace/var/circle-build-num)
-            make deploy
+            make -j2 deploy
 
   build-release:
     <<: *defaults
@@ -172,7 +172,7 @@ jobs:
             NEWRELIC_APPNAME: Planet4 Flibble Release
           command: |
             export BUILD_TAG=build-$(cat /tmp/workspace/var/circle-build-num)
-            make deploy
+            make -j2 deploy
 
   build-tag:
     <<: *defaults
@@ -257,7 +257,7 @@ jobs:
             NEWRELIC_APPNAME: Planet4 Flibble Production
           command: |
             export BUILD_TAG=build-$(cat /tmp/workspace/var/circle-build-num)
-            make deploy
+            make -j2 deploy
 
 workflows:
   version: 2
