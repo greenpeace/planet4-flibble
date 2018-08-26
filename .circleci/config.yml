@@ -179,14 +179,29 @@ jobs:
       <<: *production_environment
     <<: *deploy_steps
 
+
+workflow_definitions:
+  develop_common: &develop_common
+    context: org-global
+    filters:
+      branches:
+        only: develop
+  release_common: &release_common
+    context: org-global
+    filters:
+      branches:
+        only: /^release.*/
+  tag_common: &tag_common
+    context: org-global
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
+
 workflows:
   version: 2
   develop:
-    develop_common: &develop_common
-      context: org-global
-      filters:
-        branches:
-          only: develop
     jobs:
     - build-branch:
         <<: *develop_common
@@ -200,11 +215,6 @@ workflows:
           - deploy-develop
 
   release:
-    release_common: &release_common
-      context: org-global
-      filters:
-        branches:
-          only: /^release.*/
     jobs:
     - build-release:
         <<: *release_common
@@ -227,22 +237,15 @@ workflows:
           - hold-promote
           - notify-promote
   tag:
-    tag_common: &tag_common
-      context: org-global
-      filters:
-        branches:
-          ignore: /.*/
-        tags:
-          only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
     jobs:
       - build-tag:
           <<: *tag_common
       - hold-tag:
-          type: approval
           <<: *tag_common
+          type: approval
           requires:
             - build-tag
       - deploy-tag:
+          <<: *tag_common
           requires:
             - hold-tag
-          <<: *tag_common
