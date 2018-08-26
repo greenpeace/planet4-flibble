@@ -100,7 +100,7 @@ job_definitions:
     steps:
       - attach_workspace:
           at: /tmp/workspace
-      - run: TYPE="@rawalker Promote release/$(cat /tmp/workspace/var/new_release)" notify-job-hold.sh
+      - run: TYPE="@rawalker Promote release/$(increment-version.sh "(git-current-tag.sh)")" notify-job-hold.sh
 
   finish_release: &finish_release
     working_directory: /tmp/workspace/src
