@@ -236,13 +236,13 @@ workflows:
           only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
     jobs:
       - build-tag:
-          <<: *release_common
+          <<: *tag_common
       - hold-tag:
           type: approval
-          <<: *release_common
+          <<: *tag_common
           requires:
             - build-tag
       - deploy-tag:
           requires:
             - hold-tag
-          <<: *release_common
+          <<: *tag_common
