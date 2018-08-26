@@ -36,7 +36,8 @@ job_environments:
     GOOGLE_PROJECT_ID: planet4-production
     HELM_NAMESPACE: flibble
     HELM_RELEASE: planet4-flibble-master
-    MIN_REPLICA_COUNT: 2
+    MIN_REPLICA_COUNT: 1
+    MAX_REPLICA_COUNT: 1
     NEWRELIC_APPNAME: P4 flibble Production
     WP_DB_NAME: planet4-flibble_wordpress_master
     WP_STATELESS_BUCKET: planet4-flibble-stateless
@@ -178,90 +179,73 @@ jobs:
       <<: *production_environment
     <<: *deploy_steps
 
+
+workflow_definitions:
+  develop_common: &develop_common
+    context: org-global
+    filters:
+      branches:
+        only: develop
+  release_common: &release_common
+    context: org-global
+    filters:
+      branches:
+        only: /^release.*/
+  tag_common: &tag_common
+    context: org-global
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
+
 workflows:
   version: 2
   develop:
     jobs:
     - build-branch:
-        context: org-global
-        filters:
-          branches:
-            only: develop
+        <<: *develop_common
     - deploy-develop:
-        context: org-global
+        <<: *develop_common
         requires:
           - build-branch
-        filters:
-          branches:
-            only: develop
     - prepare-release:
-        context: org-global
+        <<: *develop_common
         requires:
           - deploy-develop
-        filters:
-          branches:
-            only: develop
 
   release:
     jobs:
     - build-release:
-        context: org-global
-        filters:
-          branches:
-            only: /^release.*/
+        <<: *release_common
     - deploy-release:
-        context: org-global
+        <<: *release_common
         requires:
           - build-release
-        filters:
-          branches:
-            only: /^release.*/
     - notify-promote:
-        context: org-global
+        <<: *release_common
         requires:
           - deploy-release
-        filters:
-          branches:
-            only: /^release.*/
     - hold-promote:
+        <<: *release_common
         type: approval
         requires:
           - deploy-release
-        filters:
-          branches:
-            only: /^release.*/
     - finish-release:
-        context: org-global
+        <<: *release_common
         requires:
           - hold-promote
           - notify-promote
-        filters:
-          branches:
-            only: /^release.*/
   tag:
     jobs:
       - build-tag:
-          context: org-global
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
+          <<: *tag_common
       - hold-tag:
+          <<: *tag_common
           type: approval
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
           requires:
             - build-tag
       - deploy-tag:
-          context: org-global
+          <<: *tag_common
           requires:
             - hold-tag
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
