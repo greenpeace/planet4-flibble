@@ -1,14 +1,12 @@
 {
-	"name": "greenpeace/planet4-flibble",
-	"version": "0.0.1",
+  "name": "greenpeace/planet4-flibble",
+  "version": "0.1.2",
   "description": "Greenpeace P4 Flibble",
   "license": "MIT",
-	"require": {
-		"greenpeace/planet4-child-theme" : "dev-develop",
-		"greenpeace/planet4-master-theme" : "dev-develop",
-		"wpackagist-plugin/rollbar": "*"
-	},
-	"scripts": {
-		"site:custom" : []
-	}
+  "require": {
+    "wpackagist-plugin/rollbar": "*"
+  },
+  "scripts": {
+    "site:custom": []
+  }
 }
