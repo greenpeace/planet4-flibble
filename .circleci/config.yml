@@ -98,6 +98,7 @@ job_definitions:
             - src
 
   notify_promote: &notify_promote
+    working_directory: /tmp/workspace/src
     steps:
       - attach_workspace:
           at: /tmp/workspace
