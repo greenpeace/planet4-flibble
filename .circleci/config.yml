@@ -101,7 +101,12 @@ job_definitions:
     working_directory: ~/project
     steps:
       - checkout
-      - run: TYPE="@rawalker Promote release/$(increment-version.sh "$(git-current-tag.sh)")" notify-job-hold.sh
+      - run:
+          name: notify
+          command: |
+            TYPE="@rawalker Promote release/$(increment-version.sh "$(git-current-tag.sh)")" \
+            EXTRA_TEXT="Verify: https://$APP_HOSTNAME/$APP_HOSTPATH"
+            notify-job-hold.sh
 
   finish_release: &finish_release
     working_directory: /tmp/workspace/src
@@ -139,6 +144,8 @@ jobs:
   notify-promote:
     <<: *defaults
     <<: *notify_promote
+    environment:
+      <<: *release_environment
 
   build-release:
     <<: *defaults
