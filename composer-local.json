@@ -1,6 +1,5 @@
 {
 	"name": "greenpeace/planet4-flibble",
-	"version": "0.0.1",
   "description": "Greenpeace P4 Flibble",
   "license": "MIT",
 	"require": {
