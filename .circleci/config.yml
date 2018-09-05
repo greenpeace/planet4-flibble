@@ -75,7 +75,7 @@ job_definitions:
             # Release branch already exists
             git checkout release/$(cat /tmp/workspace/var/new_release)
             # Merge changes from develop to release
-            git merge --no-edit --no-ff --log -m ":robot: Merge develop > release" develop
+            git merge -Xtheirs --no-edit --no-ff --log -m ":robot: Merge develop > release" develop
           fi
       - run: mv composer-local.json /tmp/workspace
       - run: jq ".version=\"$(cat /tmp/workspace/var/new_release | cut -d "v" -f 2)\"|.require|=with_entries(select(.key|test(\"greenpeace.*$\")|not))" /tmp/workspace/composer-local.json | tee composer-local.json
