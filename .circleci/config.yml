@@ -2,7 +2,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: gcr.io/planet-4-151612/p4-builder:latest
+    - image: gcr.io/planet-4-151612/p4-builder:develop
   working_directory:  /home/circleci
 
 job_environments:
@@ -67,26 +67,7 @@ job_definitions:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - run: git-current-tag.sh | tee /tmp/workspace/var/old_release
-      - run: increment-version.sh $(cat /tmp/workspace/var/old_release) | tee /tmp/workspace/var/new_release
-      - run: |
-          if ! release-start.sh $(cat /tmp/workspace/var/new_release)
-          then
-            # Release branch already exists
-            git checkout release/$(cat /tmp/workspace/var/new_release)
-            # Merge changes from develop to release
-            git merge -Xtheirs --no-edit --no-ff --log -m ":robot: Merge develop > release" develop
-          fi
-      - run: mv composer-local.json /tmp/workspace
-      - run: jq ".version=\"$(cat /tmp/workspace/var/new_release | cut -d "v" -f 2)\"|.require|=with_entries(select(.key|test(\"greenpeace.*$\")|not))" /tmp/workspace/composer-local.json | tee composer-local.json
-      - run: composer validate composer-local.json
-      - run: git add .
-      - run:
-          name: git commit
-          command: |
-            git commit --allow-empty -m ":robot: Release $(cat /tmp/workspace/var/new_release)"
-      - run: git push origin --delete release/$(cat /tmp/workspace/var/old_release) || exit 0
-      - run: git push -u origin release/$(cat /tmp/workspace/var/new_release)
+      - run: release-prepare-nro.sh
       - run:
           name: Notify failure
           when: on_fail
