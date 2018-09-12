@@ -7,6 +7,7 @@
 		"wpackagist-plugin/rollbar": "*"
 	},
 	"scripts": {
-		"site:custom" : []
+		"install:plugin-ideapush": "wp plugin install --activate https://raw.githubusercontent.com/greenpeace/planet4-3rdparty-plugins/master/ideapush-v4.6.zip",
+		"site:custom" : ["@install:plugin-ideapush"]
 	}
 }
