@@ -186,24 +186,6 @@ jobs:
       <<: *production_environment
     <<: *deploy_steps
 
-workflow_definitions:
-  develop_common: &develop_common
-    context: org-global
-    filters:
-      branches:
-        only: develop
-  release_common: &release_common
-    context: org-global
-    filters:
-      branches:
-        only: /^release.*/
-  tag_common: &tag_common
-    context: org-global
-    filters:
-      branches:
-        ignore: /.*/
-      tags:
-        only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
 
   create-sync-sql:
     <<: *defaults
@@ -258,6 +240,26 @@ workflow_definitions:
       - run: echo $SQLPROXY_KEY | base64 -d > key.json
       - run: /home/circleci/sql_to_sync_site.sh develop
 
+workflow_definitions:
+  develop_common: &develop_common
+    context: org-global
+    filters:
+      branches:
+        only: develop
+  release_common: &release_common
+    context: org-global
+    filters:
+      branches:
+        only: /^release.*/
+  tag_common: &tag_common
+    context: org-global
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
+
+
 workflows:
   version: 2
   develop:
@@ -305,11 +307,7 @@ workflows:
           requires:
             - build-tag
       - notify-hold:
-          context: org-global
-          branches:
-            ignore: /.*/
-          tags:
-            only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
+          <<: *tag_common
           requires:
             - build-tag
       - deploy-tag:
