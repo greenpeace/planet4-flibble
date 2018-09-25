@@ -138,6 +138,7 @@ jobs:
     <<: *defaults
     <<: *notify_promote
     environment:
+      <<: *common_environment
       <<: *release_environment
 
   build-release:
