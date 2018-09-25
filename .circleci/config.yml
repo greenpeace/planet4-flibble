@@ -89,6 +89,17 @@ job_definitions:
             EXTRA_TEXT="Verify: https://$APP_HOSTNAME/$APP_HOSTPATH"
             notify-job-hold.sh
 
+  notify_hold: &notify_hold
+    working_directory: ~/project
+    steps:
+      - checkout
+      - run:
+          name: notify
+          command: |
+            TYPE="@rawalker Hold: $(increment-version.sh "$(git-current-tag.sh)")" \
+            EXTRA_TEXT="Verify: https://$APP_HOSTNAME/$APP_HOSTPATH"
+            notify-job-hold.sh
+
   finish_release: &finish_release
     working_directory: /tmp/workspace/src
     steps:
@@ -102,6 +113,7 @@ job_definitions:
           name: Notify failure
           when: on_fail
           command: TYPE="Promote" notify-job-failure.sh
+
 
   deploy_steps: &deploy_steps
     steps:
@@ -146,6 +158,13 @@ jobs:
       <<: *production_environment
     <<: *build_steps
 
+  notify-hold:
+    <<: *defaults
+    environment:
+      <<: *common_environment
+      <<: *production_environment
+    <<: *notify_hold
+
   deploy-develop:
     <<: *defaults
     environment:
@@ -168,6 +187,59 @@ jobs:
     <<: *deploy_steps
 
 
+  create-sync-sql:
+    <<: *defaults
+    environment:
+       <<: *common_environment
+       <<: *production_environment
+    working_directory: /tmp/workspace/src
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+      - run: echo $SQLPROXY_KEY | base64 -d > key.json
+      - run: /home/circleci/sql_create_sync_file.sh
+
+
+  sync-sql-to-release:
+    <<: *defaults
+    environment:
+       <<: *common_environment
+       <<: *release_environment
+    working_directory: /tmp/workspace/src
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+      - run: echo $SQLPROXY_KEY | base64 -d > key.json
+      - run: /home/circleci/sql_to_sync_site.sh release
+
+  sync-sql-to-develop:
+    <<: *defaults
+    environment:
+       <<: *common_environment
+       <<: *develop_environment
+    working_directory: /tmp/workspace/src
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+      - run: echo $SQLPROXY_KEY | base64 -d > key.json
+      - run: /home/circleci/sql_to_sync_site.sh develop
+
 workflow_definitions:
   develop_common: &develop_common
     context: org-global
@@ -186,6 +258,7 @@ workflow_definitions:
         ignore: /.*/
       tags:
         only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
+
 
 workflows:
   version: 2
@@ -231,6 +304,10 @@ workflows:
       - hold-tag:
           <<: *tag_common
           type: approval
+          requires:
+            - build-tag
+      - notify-hold:
+          <<: *tag_common
           requires:
             - build-tag
       - deploy-tag:
