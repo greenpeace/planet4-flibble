@@ -258,7 +258,13 @@ workflow_definitions:
         ignore: /.*/
       tags:
         only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
-
+  sync_common: &sync_common
+    context: org-global
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /sync.*/
 
 workflows:
   version: 2
@@ -314,3 +320,16 @@ workflows:
           <<: *tag_common
           requires:
             - hold-tag
+
+  create-sync-sql:
+    jobs:
+    - create-sync-sql:
+        <<: *sync_common
+    - sync-sql-to-release:
+        <<: *sync_common
+        requires:
+          - create-sync-sql
+    - sync-sql-to-develop:
+        <<: *sync_common
+        requires:
+          - sync-sql-to-release
