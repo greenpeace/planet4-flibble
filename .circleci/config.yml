@@ -67,26 +67,7 @@ job_definitions:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - run: git-current-tag.sh | tee /tmp/workspace/var/old_release
-      - run: increment-version.sh $(cat /tmp/workspace/var/old_release) | tee /tmp/workspace/var/new_release
-      - run: |
-          if ! release-start.sh $(cat /tmp/workspace/var/new_release)
-          then
-            # Release branch already exists
-            git checkout release/$(cat /tmp/workspace/var/new_release)
-            # Merge changes from develop to release
-            git merge --no-edit --no-ff --log -m ":robot: Merge develop > release" develop
-          fi
-      - run: mv composer-local.json /tmp/workspace
-      - run: jq ".version=\"$(cat /tmp/workspace/var/new_release | cut -d "v" -f 2)\"|.require|=with_entries(select(.key|test(\"greenpeace.*$\")|not))" /tmp/workspace/composer-local.json | tee composer-local.json
-      - run: composer validate composer-local.json
-      - run: git add .
-      - run:
-          name: git commit
-          command: |
-            git commit --allow-empty -m ":robot: Release $(cat /tmp/workspace/var/new_release)"
-      - run: git push origin --delete release/$(cat /tmp/workspace/var/old_release) || exit 0
-      - run: git push -u origin release/$(cat /tmp/workspace/var/new_release)
+      - run: release-prepare-nro.sh
       - run:
           name: Notify failure
           when: on_fail
@@ -101,7 +82,23 @@ job_definitions:
     working_directory: ~/project
     steps:
       - checkout
-      - run: TYPE="@rawalker Promote release/$(increment-version.sh "$(git-current-tag.sh)")" notify-job-hold.sh
+      - run:
+          name: notify
+          command: |
+            TYPE="@rawalker Promote release/$(increment-version.sh "$(git-current-tag.sh)")" \
+            EXTRA_TEXT="Verify: https://$APP_HOSTNAME/$APP_HOSTPATH" \
+            notify-job-hold.sh
+
+  notify_hold: &notify_hold
+    working_directory: ~/project
+    steps:
+      - checkout
+      - run:
+          name: notify
+          command: |
+            TYPE="@rawalker Hold: $(increment-version.sh "$(git-current-tag.sh)")" \
+            EXTRA_TEXT="Verify: https://$APP_HOSTNAME/$APP_HOSTPATH"
+            notify-job-hold.sh
 
   finish_release: &finish_release
     working_directory: /tmp/workspace/src
@@ -116,6 +113,7 @@ job_definitions:
           name: Notify failure
           when: on_fail
           command: TYPE="Promote" notify-job-failure.sh
+
 
   deploy_steps: &deploy_steps
     steps:
@@ -139,6 +137,8 @@ jobs:
   notify-promote:
     <<: *defaults
     <<: *notify_promote
+    environment:
+      <<: *release_environment
 
   build-release:
     <<: *defaults
@@ -157,6 +157,13 @@ jobs:
       <<: *common_environment
       <<: *production_environment
     <<: *build_steps
+
+  notify-hold:
+    <<: *defaults
+    environment:
+      <<: *common_environment
+      <<: *production_environment
+    <<: *notify_hold
 
   deploy-develop:
     <<: *defaults
@@ -180,6 +187,59 @@ jobs:
     <<: *deploy_steps
 
 
+  create-sync-sql:
+    <<: *defaults
+    environment:
+       <<: *common_environment
+       <<: *production_environment
+    working_directory: /tmp/workspace/src
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+      - run: echo $SQLPROXY_KEY | base64 -d > key.json
+      - run: /home/circleci/sql_create_sync_file.sh
+
+
+  sync-sql-to-release:
+    <<: *defaults
+    environment:
+       <<: *common_environment
+       <<: *release_environment
+    working_directory: /tmp/workspace/src
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+      - run: echo $SQLPROXY_KEY | base64 -d > key.json
+      - run: /home/circleci/sql_to_sync_site.sh release
+
+  sync-sql-to-develop:
+    <<: *defaults
+    environment:
+       <<: *common_environment
+       <<: *develop_environment
+    working_directory: /tmp/workspace/src
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+      - run: echo $SQLPROXY_KEY | base64 -d > key.json
+      - run: /home/circleci/sql_to_sync_site.sh develop
+
 workflow_definitions:
   develop_common: &develop_common
     context: org-global
@@ -198,6 +258,7 @@ workflow_definitions:
         ignore: /.*/
       tags:
         only: /^v\p{Digit}+\.\p{Digit}+\.\p{Digit}+.*/
+
 
 workflows:
   version: 2
@@ -243,6 +304,10 @@ workflows:
       - hold-tag:
           <<: *tag_common
           type: approval
+          requires:
+            - build-tag
+      - notify-hold:
+          <<: *tag_common
           requires:
             - build-tag
       - deploy-tag:
