@@ -46,6 +46,10 @@ job_definitions:
     working_directory: ~/
     steps:
       - setup_remote_docker
+      - restore_cache:
+          keys:
+            - source-v1-{{ .Branch }}
+            - source-v1-
       - run: activate-gcloud-account.sh
       - run: mkdir -p /tmp/workspace/var
       - run: mkdir -p /tmp/workspace/src
@@ -55,6 +59,10 @@ job_definitions:
           name: Notify failure
           when: on_fail
           command: TYPE="Build" notify-job-failure.sh
+      - save_cache:
+          key: composer-v1-{{ .Branch }}
+          paths:
+            - source/cache
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
