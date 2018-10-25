@@ -49,7 +49,8 @@ job_definitions:
       - setup_remote_docker
       - restore_cache:
           keys:
-            - source-v1-{{ .Branch }}
+            - source-v1-{{ .Branch }}-{{ .Revision }}
+            - source-v1-{{ .Branch }}-
             - source-v1-
       - run: activate-gcloud-account.sh
       - run: mkdir -p /tmp/workspace/var
