@@ -49,7 +49,10 @@ job_definitions:
       - setup_remote_docker
       - restore_cache:
           keys:
-            - composer-v1-{{ .Branch }}-{{ .Revision }}
+            - composer-v2-{{ .Branch }}-{{ .Revision }}-{{ .BuildNum }}
+            - composer-v2-{{ .Branch }}-{{ .Revision }}
+            - composer-v2-{{ .Branch }}
+            - composer-v2
       - run: activate-gcloud-account.sh
       - run: mkdir -p /tmp/workspace/var
       - run: mkdir -p /tmp/workspace/src
@@ -60,7 +63,7 @@ job_definitions:
           when: on_fail
           command: TYPE="Build" notify-job-failure.sh
       - save_cache:
-          key: composer-v1-{{ .Branch }}-{{ .Revision }}
+          key: composer-v2-{{ .Branch }}-{{ .Revision }}-{{ .BuildNum }}
           paths:
             - source/cache
       - persist_to_workspace:
