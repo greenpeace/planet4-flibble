@@ -53,10 +53,13 @@ job_definitions:
             - composer-v2-{{ .Branch }}-{{ .Revision }}
             - composer-v2-{{ .Branch }}
             - composer-v2
+      - run: |
+          [ -d source/cache ] && ls -al source/cache
       - run: activate-gcloud-account.sh
       - run: mkdir -p /tmp/workspace/var
       - run: mkdir -p /tmp/workspace/src
       - run: echo "${CIRCLE_BUILD_NUM}" > /tmp/workspace/var/circle-build-num
+
       - run: make
       - run:
           name: Notify failure
