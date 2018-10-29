@@ -54,7 +54,7 @@ job_definitions:
             - composer-v2-{{ .Branch }}
             - composer-v2
       - run: |
-          if [[ -d ~/source/cache ]]; then ls -al ~source/cache; fi
+          if [[ -d source/cache ]]; then ls -al source/cache; fi
       - run: activate-gcloud-account.sh
       - run: mkdir -p /tmp/workspace/var
       - run: mkdir -p /tmp/workspace/src
