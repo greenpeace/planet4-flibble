@@ -125,7 +125,6 @@ job_definitions:
           when: on_fail
           command: TYPE="Promote" notify-job-failure.sh
 
-
   deploy_steps: &deploy_steps
     working_directory: ~/
     steps:
@@ -289,10 +288,10 @@ workflows:
         <<: *develop_common
         requires:
           - build-branch
-    - prepare-release:
-        <<: *develop_common
-        requires:
-          - deploy-develop
+    # - prepare-release:
+    #     <<: *develop_common
+    #     requires:
+    #       - deploy-develop
 
   release:
     jobs:
