@@ -323,15 +323,6 @@ workflows:
     jobs:
       - build-tag:
           <<: *tag_common
-      - hold-tag:
-          <<: *tag_common
-          type: approval
-          requires:
-            - build-tag
-      - notify-hold:
-          <<: *tag_common
-          requires:
-            - build-tag
       - deploy-tag:
           <<: *tag_common
           requires:
