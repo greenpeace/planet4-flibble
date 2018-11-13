@@ -12,7 +12,7 @@ job_environments:
   develop_environment: &develop_environment
     APP_ENVIRONMENT: development
     APP_HOSTNAME: k8s.p4.greenpeace.org
-    CLOUDSQL_INSTANCE: p4-develop-k8s
+    CLOUDSQL_INSTANCE: p4-develop-k8s-error
     GOOGLE_PROJECT_ID: planet-4-151612
     HELM_NAMESPACE: develop
     MAX_REPLICA_COUNT: 2
