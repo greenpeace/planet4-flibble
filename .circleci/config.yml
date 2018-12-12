@@ -17,6 +17,7 @@ job_environments:
     HELM_NAMESPACE: develop
     MAX_REPLICA_COUNT: 2
     NEWRELIC_APPNAME: P4 flibble Development
+    WP_VERSION: latest
     WP_DB_NAME: planet4-flibble_wordpress_develop
     WP_STATELESS_BUCKET: planet4-flibble-stateless-develop
   release_environment: &release_environment
