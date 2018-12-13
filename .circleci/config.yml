@@ -8,6 +8,8 @@ job_environments:
   common_environment: &common_environment
     CONTAINER_PREFIX: planet4-flibble
     APP_HOSTPATH: flibble
+    INFRA_VERSION: feature-custom_wp_version
+    WP_VERSION: latest
   develop_environment: &develop_environment
     APP_ENVIRONMENT: development
     APP_HOSTNAME: k8s.p4.greenpeace.org
@@ -49,21 +51,24 @@ job_definitions:
       - setup_remote_docker
       - restore_cache:
           keys:
-            - composer-v2-{{ .Branch }}-{{ .Revision }}-{{ .BuildNum }}
-            - composer-v2-{{ .Branch }}-{{ .Revision }}
-            - composer-v2-{{ .Branch }}
-            - composer-v2
+            - composer-v5-{{ .Branch }}-{{ .Revision }}-{{ .BuildNum }}
+            - composer-v5-{{ .Branch }}-{{ .Revision }}
+            - composer-v5-{{ .Branch }}
+            - composer-v5
+      - run: |
+          if [[ -d source/cache ]]; then ls -al source/cache; fi
       - run: activate-gcloud-account.sh
       - run: mkdir -p /tmp/workspace/var
       - run: mkdir -p /tmp/workspace/src
       - run: echo "${CIRCLE_BUILD_NUM}" > /tmp/workspace/var/circle-build-num
+
       - run: make
       - run:
           name: Notify failure
           when: on_fail
           command: TYPE="Build" notify-job-failure.sh
       - save_cache:
-          key: composer-v2-{{ .Branch }}-{{ .Revision }}-{{ .BuildNum }}
+          key: composer-v5-{{ .Branch }}-{{ .Revision }}-{{ .BuildNum }}
           paths:
             - source/cache
       - persist_to_workspace:
@@ -124,7 +129,6 @@ job_definitions:
           name: Notify failure
           when: on_fail
           command: TYPE="Promote" notify-job-failure.sh
-
 
   deploy_steps: &deploy_steps
     working_directory: ~/
@@ -320,19 +324,8 @@ workflows:
     jobs:
       - build-tag:
           <<: *tag_common
-      - hold-tag:
-          <<: *tag_common
-          type: approval
-          requires:
-            - build-tag
-      - notify-hold:
-          <<: *tag_common
-          requires:
-            - build-tag
       - deploy-tag:
           <<: *tag_common
-          requires:
-            - hold-tag
 
   create-sync-sql:
     jobs:
