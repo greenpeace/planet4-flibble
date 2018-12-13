@@ -326,6 +326,8 @@ workflows:
           <<: *tag_common
       - deploy-tag:
           <<: *tag_common
+          requires:
+            - build-tag
 
   create-sync-sql:
     jobs:
