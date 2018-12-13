@@ -9,7 +9,7 @@ job_environments:
     CONTAINER_PREFIX: planet4-flibble
     APP_HOSTPATH: flibble
     INFRA_VERSION: feature-custom_wp_version
-    WP_VERSION: latest
+    # WP_VERSION: latest
   develop_environment: &develop_environment
     APP_ENVIRONMENT: development
     APP_HOSTNAME: k8s.p4.greenpeace.org
