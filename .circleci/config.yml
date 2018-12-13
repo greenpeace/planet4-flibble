@@ -293,10 +293,10 @@ workflows:
         <<: *develop_common
         requires:
           - build-branch
-    # - prepare-release:
-    #     <<: *develop_common
-    #     requires:
-    #       - deploy-develop
+    - prepare-release:
+        <<: *develop_common
+        requires:
+          - deploy-develop
 
   release:
     jobs:
