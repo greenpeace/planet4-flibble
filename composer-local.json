@@ -5,7 +5,6 @@
 	"require": {
 		"greenpeace/planet4-child-theme" : "dev-develop",
 		"greenpeace/planet4-master-theme" : "broken!",
-		"greenpeace/planet4-plugin-blocks" : "dev-develop",
-		"wpackagist-plugin/rollbar": "*"
+		"greenpeace/planet4-plugin-blocks" : "dev-develop"
 	}
 }
