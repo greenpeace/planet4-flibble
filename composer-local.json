@@ -4,6 +4,6 @@
   "license": "MIT",
 	"require": {
 		"greenpeace/planet4-child-theme" : "0.2.10",
-		"greenpeace/planet4-master-theme" : "dev-master"
+		"wpackagist-plugin/wp-newrelic": "^1.3"
 	}
 }
