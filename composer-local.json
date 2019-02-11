@@ -1,10 +1,13 @@
 {
 	"name": "greenpeace/planet4-flibble",
-  "description": "Greenpeace P4 Flibble",
-  "license": "MIT",
+	"description": "Greenpeace P4 Flibble",
+	"license": "MIT",
 	"require": {
 		"greenpeace/planet4-child-theme" : "dev-develop",
 		"greenpeace/planet4-master-theme" : "dev-develop",
 		"greenpeace/planet4-plugin-blocks" : "dev-develop"
+	},
+	"scripts": {
+		"site:custom" : []
 	}
 }
