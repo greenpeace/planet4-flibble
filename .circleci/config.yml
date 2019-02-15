@@ -3,7 +3,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: gcr.io/planet-4-151612/p4-builder:build-430
+    - image: gcr.io/planet-4-151612/p4-builder:desktop-4k7v934
 
 job_environments:
   common_environment: &common_environment
