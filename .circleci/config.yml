@@ -3,7 +3,7 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: gcr.io/planet-4-151612/p4-builder:feature-parent-image
+    - image: gcr.io/planet-4-151612/p4-builder:develop
 
 job_environments:
   common_environment: &common_environment
@@ -58,7 +58,6 @@ job_definitions:
             - composer-v5-{{ .Branch }}-{{ .Revision }}
             - composer-v5-{{ .Branch }}
             - composer-v5
-      - run: yq --version || exit 1
       - run: activate-gcloud-account.sh
       - run: mkdir -p /tmp/workspace/var
       - run: mkdir -p /tmp/workspace/src
