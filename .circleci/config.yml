@@ -3,12 +3,12 @@ version: 2
 
 defaults: &defaults
   docker:
-    - image: gcr.io/planet-4-151612/p4-builder:develop
+    - image: gcr.io/planet-4-151612/p4-builder:test-cron
 
 job_environments:
   common_environment: &common_environment
     APP_HOSTPATH: flibble
-    CHART_VERSION: 0.6.1-alpha
+    CHART_VERSION: 0.6.1-alpha1
     CONTAINER_PREFIX: planet4-flibble
     WP_DB_NAME_PREFIX: planet4-flibble_wordpress
   develop_environment: &develop_environment
