@@ -8,7 +8,7 @@ defaults: &defaults
 job_environments:
   common_environment: &common_environment
     APP_HOSTPATH: flibble
-    CHART_VERSION: 0.6.42
+    CHART_VERSION: 0.6.1
     CONTAINER_PREFIX: planet4-flibble
     WP_DB_NAME_PREFIX: planet4-flibble_wordpress
   develop_environment: &develop_environment
