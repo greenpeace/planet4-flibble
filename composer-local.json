@@ -5,6 +5,7 @@
 	"require": {
 		"greenpeace/planet4-child-theme" : "0.2.10",
 		"greenpeace/planet4-master-theme" : "dev-feature/search-cache",
+		"greenpeace/planet4-nginx-helper" : "dev-feature/PLANET-3268-fix-server-host",
 		"wpackagist-plugin/gdpr-comments":"^1.0.2"
 	},
 	"scripts": {
