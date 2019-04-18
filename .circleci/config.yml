@@ -11,6 +11,7 @@ job_environments:
     CONTAINER_PREFIX: planet4-flibble
     WP_DB_NAME_PREFIX: planet4-flibble_wordpress
     PAGESPEED_ENABLED: true
+    CHART_VERSION: 0.8.0-beta1
   develop_environment: &develop_environment
     APP_ENVIRONMENT: development
     APP_HOSTNAME: k8s.p4.greenpeace.org
