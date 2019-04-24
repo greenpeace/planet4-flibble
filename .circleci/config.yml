@@ -10,6 +10,7 @@ job_environments:
     APP_HOSTPATH: flibble
     CONTAINER_PREFIX: planet4-flibble
     WP_DB_NAME_PREFIX: planet4-flibble_wordpress
+    CHART_VERSION: 0.7.9
     PAGESPEED_ENABLED: true
     PHP_PROCESS_MANAGER_MAX_CHILDREN: 7
     PHP_PROCESS_MANAGER_MAX_REQUESTS: 420
