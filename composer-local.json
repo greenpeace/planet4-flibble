@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"require": {
 		"greenpeace/planet4-master-theme" : "dev-planet-2658",
-		"greenpeace/planet4-plugin-blocks" : "dev-release/v1.40.0"
+		"greenpeace/planet4-plugin-blocks" : "dev-release/v1.42.0"
 	},
 	"scripts": {
 		"site:custom" : []
