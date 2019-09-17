@@ -2,7 +2,9 @@
 	"name": "greenpeace/planet4-flibble",
 	"description": "Greenpeace P4 Flibble",
 	"license": "MIT",
-	"require": {},
+	"require": {
+		"wp-graphql/wp-graphql": "*"
+	},
 	"scripts": {
 		"site:custom" : []
 	}
