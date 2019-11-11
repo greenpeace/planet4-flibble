@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"require": {
 		"wp-graphql/wp-graphql": "*",
-		"sentry/sdk": "^2.0.3"
+		"wpackagist-plugin/wp-sentry-integration":"^3.0.4"
 	},
 	"scripts": {
 		"site:custom" : []
