@@ -4,17 +4,11 @@
 	"license": "MIT",
 	"require": {
 		"greenpeace/planet4-child-theme-netherlands": "dev-develop",
+		"greenpeace/planet4-gpnl-plugin-gutenberg-blocks": "dev-develop",
 		"wp-graphql/wp-graphql": "*",
-		"wpackagist-plugin/wp-sentry-integration":"^3.0.4",
-		"greenpeace/planet4-gpnl-plugin-gutenberg-blocks": "dev-develop"
+		"wpackagist-plugin/wp-sentry-integration":"^3.0.4"
 	},
 	"scripts": {
 		"site:custom" : []
-	},
-	"repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/greenpeace/planet4-gpnl-plugin-gutenberg-blocks"
-    }
-  ]
+	}
 }
