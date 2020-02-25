@@ -3,10 +3,7 @@
 	"description": "Greenpeace P4 Flibble",
 	"license": "MIT",
 	"require": {
-		"greenpeace/planet4-child-theme-netherlands": "4.1.0",
-		"greenpeace/planet4-gpnl-plugin-gutenberg-blocks": "1.6.0",
-		"wp-graphql/wp-graphql": "*",
-		"wpackagist-plugin/wp-sentry-integration":"^3.0.4"
+		"wp-graphql/wp-graphql": "*"
 	},
 	"scripts": {
 		"site:custom" : []
