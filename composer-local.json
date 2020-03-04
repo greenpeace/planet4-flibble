@@ -3,7 +3,6 @@
 	"description": "Greenpeace P4 Flibble",
 	"license": "MIT",
 	"require": {
-		"greenpeace/planet4-master-theme" : "v1.77.1",
 		"greenpeace/planet4-child-theme" : "*",
 		"wp-graphql/wp-graphql" : "*"
 	},
