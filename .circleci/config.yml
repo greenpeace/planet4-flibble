@@ -424,6 +424,7 @@ workflows:
           <<: *on_release_tag
           notify: true
           requires:
+            - test-staging
             - hold-production
   rollback-staging:
     when:
