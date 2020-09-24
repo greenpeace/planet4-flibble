@@ -278,7 +278,7 @@ jobs:
     <<: *defaults
     environment:
       <<: *common_environment
-      <<: *release_environment
+      <<: *production_environment
     <<: *rollback_steps
 
   deploy-production:
