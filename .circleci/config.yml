@@ -4,7 +4,7 @@ parameters:
   release_stage:
     type: enum
     default: "release"
-    enum: ["release", "rollback"]
+    enum: ["release", "rollback", "rollback-production"]
 
 defaults: &defaults
   docker:
@@ -273,6 +273,13 @@ jobs:
       - run:
           name: Approve promotion
           command: promote-to-production.sh "${CIRCLE_WORKFLOW_ID}"
+  
+  rollback-production:
+    <<: *defaults
+    environment:
+      <<: *common_environment
+      <<: *release_environment
+    <<: *rollback_steps
 
   deploy-production:
     <<: *defaults
@@ -434,6 +441,17 @@ workflows:
           <<: *on_release_tag
           type: approval
       - rollback-staging:
+          <<: *on_release_tag
+          requires:
+            - hold-rollback
+  rollback-production:
+    when:
+      equal: [ "rollback-production", << pipeline.parameters.release_stage >> ]
+    jobs:
+      - hold-rollback:
+          <<: *on_release_tag
+          type: approval
+      - rollback-production:
           <<: *on_release_tag
           requires:
             - hold-rollback
