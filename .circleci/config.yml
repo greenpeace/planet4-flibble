@@ -13,7 +13,8 @@ docker_auth: &docker_auth
 defaults: &defaults
   docker:
     - image: greenpeaceinternational/p4-builder:latest
-      auth: &docker_auth
+      auth:
+        <<: *docker_auth
 
 orbs:
   slack: circleci/slack@3.4.2
@@ -36,7 +37,7 @@ job_environments:
     GOOGLE_PROJECT_ID: planet4-production
   release_environment: &release_environment
     APP_ENVIRONMENT: staging
-    APP_HOSTNAME: release.k8s.p4.greenpeace.org
+    APP_HOSTNAME: www-stage.greenpeace.org
     CLOUDSQL_INSTANCE: planet4-prod
     GCLOUD_CLUSTER: planet4-production
     GOOGLE_PROJECT_ID: planet4-production
@@ -316,7 +317,7 @@ jobs:
       <<: *common_environment
       <<: *release_environment
     <<: *finish_staging_steps
-  
+
   rollback-staging:
     <<: *defaults
     environment:
