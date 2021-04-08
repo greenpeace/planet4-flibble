@@ -3,10 +3,13 @@
 	"description": "Greenpeace P4 Flibble",
 	"license": "MIT",
 	"require": {
-		"greenpeace/planet4-child-theme" : "*",
-		"wp-graphql/wp-graphql" : "*"
+		"greenpeace/planet4-child-theme" : "*"
 	},
-	"scripts": {
-		"site:custom" : []
-	}
+"scripts": {
+	"install:plugin-apm": "wp plugin install --activate https://storage.googleapis.com/p4-ray-test/wordpress-apm-agent-elasticsearch.zip",
+
+	"site:custom": [
+		"@install:plugin-apm"
+	]
+}
 }
